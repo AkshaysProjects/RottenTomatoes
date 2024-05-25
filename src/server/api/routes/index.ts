@@ -1,6 +1,5 @@
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
-import { moviesRouter } from "./movies";
-import { showsRouter } from "./shows";
+import { mediaRouter } from "./media";
 
 /**
  * This is the primary router for your server.
@@ -8,8 +7,7 @@ import { showsRouter } from "./shows";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  movies: moviesRouter,
-  shows: showsRouter,
+  media: mediaRouter,
 });
 
 // export type definition of API
