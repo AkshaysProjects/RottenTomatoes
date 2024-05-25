@@ -3,6 +3,7 @@ import "server-only";
 import { headers } from "next/headers";
 import { cache } from "react";
 
+import { auth } from "@/auth";
 import dbConnection from "@/lib/dbConnect";
 import { createCaller } from "@/server/api/routes";
 import { createTRPCContext } from "@/server/api/trpc";
@@ -17,6 +18,7 @@ const createContext = cache(() => {
 
   return createTRPCContext({
     db: dbConnection,
+    session: auth(),
     headers: heads,
   });
 });

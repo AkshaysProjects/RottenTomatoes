@@ -1,5 +1,6 @@
 import { initTRPC } from "@trpc/server";
 import { Mongoose } from "mongoose";
+import { Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -17,6 +18,7 @@ import { ZodError } from "zod";
  */
 export const createTRPCContext = async (opts: {
   db: Promise<Mongoose>;
+  session: Promise<Session | null>;
   headers: Headers;
 }) => {
   return {

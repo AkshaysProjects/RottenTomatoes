@@ -4,6 +4,7 @@ import { type NextRequest } from "next/server";
 import dbConnection from "@/lib/dbConnect";
 import { appRouter } from "@/server/api/routes";
 import { createTRPCContext } from "@/server/api/trpc";
+import { auth } from "@/auth";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -12,6 +13,7 @@ import { createTRPCContext } from "@/server/api/trpc";
 const createContext = async (req: NextRequest) => {
   return createTRPCContext({
     db: dbConnection,
+    session: auth(),
     headers: req.headers,
   });
 };
