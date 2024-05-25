@@ -1,5 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { mediaRouter } from "./media";
+import { shortlistRouter } from "./shortlist";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { mediaRouter } from "./media";
  */
 export const appRouter = createTRPCRouter({
   media: mediaRouter,
+  shortlist: shortlistRouter,
 });
 
 // export type definition of API
