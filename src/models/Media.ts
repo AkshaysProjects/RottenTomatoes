@@ -50,4 +50,4 @@ const MediaSchema = new Schema({
 
 // Define the model
 const existingModel: Model<IMedia> = models.Media;
-export default existingModel || model<IMedia>("Media", MediaSchema);
+export default existingModel || model<IMedia>("Media", MediaSchema, "media");
