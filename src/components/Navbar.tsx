@@ -2,14 +2,23 @@
 
 import { navLinks } from "@/constants";
 import { SearchIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 export interface INavbarProps {}
 
 export function Navbar(props: INavbarProps) {
+  // Get the Auth session
+  const session = useSession();
+
+  // Simulate authentication state
+  const isAuthenticated = session.status === "authenticated";
+
+  // Get the current pathname
   const currentPathname = usePathname();
 
   return (
@@ -44,6 +53,19 @@ export function Navbar(props: INavbarProps) {
             <span className="flex items-center">{navLink.label}</span>
           </Link>
         ))}
+        {isAuthenticated ? (
+          // TODO: Add profile dropdown
+          <div>Profile</div>
+        ) : (
+          <Link
+            href="/api/auth/signin"
+            className="flex h-4/5 items-center px-6 text-center font-bold text-white"
+          >
+            <Button className="bg-white text-black hover:bg-gray-200">
+              Login
+            </Button>
+          </Link>
+        )}
       </div>
     </nav>
   );

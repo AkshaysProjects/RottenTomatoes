@@ -1,3 +1,4 @@
+import { SessionProvider } from "next-auth/react";
 import { TRPCReactProvider } from "./TRPCReactProvider";
 
 export interface IProvidersProps {
@@ -5,5 +6,9 @@ export interface IProvidersProps {
 }
 
 export function Providers({ children }: IProvidersProps) {
-  return <TRPCReactProvider>{children}</TRPCReactProvider>;
+  return (
+    <SessionProvider>
+      <TRPCReactProvider>{children}</TRPCReactProvider>
+    </SessionProvider>
+  );
 }
