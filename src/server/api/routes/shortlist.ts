@@ -4,27 +4,31 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
-// Create a new router for media
+/**
+ * TRPC router for managing a user's media shortlist:
+ * - getShortlist: Fetches the user's shortlist with pagination.
+ * - addMedia: Adds a media item to the user's shortlist.
+ * - removeMedia: Removes a media item from the user's shortlist.
+ */
 export const shortlistRouter = createTRPCRouter({
   // Procedure to get shortlist
   getShortlist: publicProcedure
-    .input(z.object({ page: z.number() }).default({ page: 1 }))
-    .query(async ({ ctx, input: { page } }) => {
+    .input(z.object({ cursor: z.number() }).default({ cursor: 1 }))
+    .query(async ({ ctx, input: { cursor } }) => {
       const session = await ctx.session;
       if (!session || !session.user)
         throw new TRPCError({ code: "UNAUTHORIZED" });
       await ctx.db;
-      const offset = page ? (page - 1) * 20 : 0;
+      const offset = cursor ? cursor - 1 : 0;
       const user = await User.findById(session.user.id);
       if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
-      const total = user.shortlist.length;
-      const totalPages = Math.ceil(total / 20);
       const data = await Media.find({ _id: { $in: user.shortlist } })
         .skip(offset)
         .limit(20)
         .lean();
-      return { total, data, totalPages };
+      return data.length === 20 ? { data, nextCursor: cursor + 20 } : { data };
     }),
+
   // Procedure to add media to shortlist
   addMedia: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -40,6 +44,7 @@ export const shortlistRouter = createTRPCRouter({
       await user.save();
       return user.shortlist;
     }),
+
   // Procedure to remove media from shortlist
   removeMedia: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -51,7 +56,7 @@ export const shortlistRouter = createTRPCRouter({
       const user = await User.findById(session.user.id);
       if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
       user.shortlist = user.shortlist.filter(
-        (mediaId) => mediaId.toString() !== id
+        (mediaId) => mediaId.toString() !== id,
       );
       await user.save();
       return user.shortlist;
