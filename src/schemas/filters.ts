@@ -1,4 +1,4 @@
-import { MediaType } from "@/models/Media";
+import { MediaType } from "@/enums";
 import { z } from "zod";
 
 // Default values for the filter object

@@ -1,10 +1,5 @@
+import { MediaType } from "@/enums";
 import { Model, Schema, Types, model, models } from "mongoose";
-
-// Define the media type enum
-export enum MediaType {
-  MOVIE = "Movie",
-  TV_SHOW = "TV Show",
-}
 
 // Define the type for the media schema
 export interface IMedia {
@@ -54,7 +49,7 @@ const MediaSchema = new Schema<IMedia>({
   bannerUrl: { type: String, required: true },
   type: {
     type: String,
-    enum: ["movie", "tv_show"],
+    enum: MediaType,
     required: true,
     index: true,
   },
