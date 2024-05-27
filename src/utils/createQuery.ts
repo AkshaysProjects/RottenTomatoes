@@ -11,6 +11,7 @@ type Query = {
   status?: { $in: string[] };
   genres?: { $elemMatch: { $in: string[] } };
   type?: string;
+  title?: { $regex: string; $options: string };
 };
 
 // Function to create a query object based on provided filters
@@ -64,6 +65,12 @@ export default function createQuery(filters: Filters) {
   if (filters.type) {
     // Add type to the query
     query.type = filters.type;
+  }
+
+  // Check if the query is provided
+  if (filters.query) {
+    // Add a condition to match the title with a case-insensitive regex
+    query.title = { $regex: filters.query, $options: "i" };
   }
 
   // Return the constructed query object

@@ -12,7 +12,7 @@ export default function Home() {
 
   // Fetch all media
   const { data, isLoading, isFetching, isError, error, fetchNextPage } =
-    api.media.getAllMedia.useInfiniteQuery(
+    api.media.getMedia.useInfiniteQuery(
       { filters },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,

@@ -29,6 +29,8 @@ export const filtersSchema = z
     genres: z.array(z.string()).default([]).optional(),
     // Type should be an optional enum value of MediaType (MOVIE or TV_SHOW)
     type: z.enum([MediaType.MOVIE, MediaType.TV_SHOW]).optional(),
+    // Query should be an optional string
+    query: z.string().optional(),
   })
   // Set the default values for the schema
   .default(defaultFilter);

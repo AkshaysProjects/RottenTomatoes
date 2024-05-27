@@ -33,5 +33,9 @@ export default function parseFilters(
   const genres = searchParams.get("genres");
   if (genres) filters.genres = genres.split(",");
 
+  // Parse query parameter
+  const query = searchParams.get("query");
+  if (query) filters.query = query;
+
   return filters; // Return the parsed Filters object
 }
