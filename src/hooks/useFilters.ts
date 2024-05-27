@@ -15,7 +15,7 @@ export default function useFilters() {
 
   // If pathname is /movies or /tv, set the type filter
   if (pathname === "/movies") filters.type = MediaType.MOVIE;
-  if (pathname === "/tv") filters.type = MediaType.TV_SHOW;
+  if (pathname === "/shows") filters.type = MediaType.TV_SHOW;
 
   return filters;
 }
