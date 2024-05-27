@@ -5,6 +5,12 @@ const nextConfig = {
       {
         hostname: "image.tmdb.org",
       },
+      {
+        hostname: "static.tvmaze.com",
+      },
+      {
+        hostname: "artworks.thetvdb.com",
+      },
     ],
   },
 };
