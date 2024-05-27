@@ -39,7 +39,7 @@ export default function Home() {
   if (!data || data.pages.length === 0) throw new Error("No data");
 
   // Flatten the pages
-  const media = data.pages.map((page) => page.data).flat();
+  const media = data.pages.flatMap((page) => page.data);
 
   return (
     <MediaGrid
