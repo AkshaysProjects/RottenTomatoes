@@ -31,7 +31,10 @@ export default function Home() {
     );
 
   // If error or no data, show error message
-  if (isError || !data) return <div>Error: {error?.message}</div>;
+  if (isError && error) throw error;
+
+  // If there is no data, throw an error
+  if (!data || data.pages.length === 0) throw new Error("No data");
 
   // Flatten the pages
   const media = data.pages.map((page) => page.data).flat();
