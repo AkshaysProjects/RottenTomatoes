@@ -2,10 +2,10 @@ import MediaCard from "@/components/media/MediaCard";
 import LoadingSkeleton from "@/components/skeletons/LoadingSkeleton";
 import Grid from "@/components/ui/grid";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
-import { Media } from "@/models/Media";
+import { TMedia } from "@/models";
 
 export interface IMediaGridProps {
-  media: Media[];
+  media: TMedia[];
   fetchNextPage: () => void;
   isFetching: boolean;
 }

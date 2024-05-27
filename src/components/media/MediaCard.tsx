@@ -1,4 +1,4 @@
-import { IMedia } from "@/models";
+import { TMedia } from "@/models";
 import {
   BookmarkCheckIcon,
   BookmarkIcon,
@@ -7,13 +7,12 @@ import {
   ClapperboardIcon,
   Tv2Icon,
 } from "lucide-react";
-import { Types } from "mongoose";
 import Image from "next/image";
 import { useState } from "react";
 import { GiTomato } from "react-icons/gi";
 
 export interface IMediaCardProps {
-  media: IMedia & { _id: Types.ObjectId };
+  media: TMedia;
 }
 
 export default function MediaCard({ media }: IMediaCardProps) {

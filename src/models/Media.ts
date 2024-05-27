@@ -28,7 +28,7 @@ export interface IMedia {
 }
 
 // Export the media interface
-export interface Media extends IMedia {
+export interface TMedia extends IMedia {
   _id: Types.ObjectId;
 }
 

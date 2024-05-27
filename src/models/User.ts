@@ -1,13 +1,17 @@
-import { Model, Schema, model, models } from "mongoose";
+import { Model, Schema, Types, model, models } from "mongoose";
 import type { AdapterUser } from "next-auth/adapters";
 
 // Create a custom user interface by extending the AdapterUser interface
-interface User extends AdapterUser {
+export interface IUser extends AdapterUser {
   shortlist: string[];
 }
 
+export interface TUser extends IUser {
+  _id: Types.ObjectId;
+}
+
 // Define the schema
-const UserSchema = new Schema<User>({
+const UserSchema = new Schema<IUser>({
   name: String,
   email: { type: String, unique: true, required: true },
   emailVerified: Date,
@@ -16,5 +20,5 @@ const UserSchema = new Schema<User>({
 });
 
 // Define the model
-const registeredModel: Model<User> = models.User;
-export default registeredModel || model<User>("User", UserSchema);
+const registeredModel: Model<IUser> = models.User;
+export default registeredModel || model<IUser>("User", UserSchema);
