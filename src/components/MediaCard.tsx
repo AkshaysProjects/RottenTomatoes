@@ -10,6 +10,7 @@ import {
 import { Types } from "mongoose";
 import Image from "next/image";
 import { useState } from "react";
+import { GiTomato } from "react-icons/gi";
 
 export interface IMediaCardProps {
   media: IMedia & { _id: Types.ObjectId };
@@ -42,9 +43,13 @@ export default function MediaCard({ media }: IMediaCardProps) {
       </div>
       <div className="w-full p-2">
         <div>
-          <div className="text-body-m text-light-blue font-light">
-            {releaseYear} • <MediaIcon className="mx-1 inline-block" />{" "}
+          <div className="text-body-m text-light-blue flex font-light">
+            {releaseYear} • <MediaIcon className="mx-1 inline-block" />
             {media.type}
+            <div className="ml-auto flex items-center gap-2 font-semibold text-red-800">
+              <GiTomato />
+              {Math.round(media.rating)}%
+            </div>
           </div>
           <div className="heading-xs mt-2">{media.title}</div>
         </div>
