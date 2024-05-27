@@ -9,7 +9,7 @@ type Query = {
     [key: string]: { $gte: DateExpression; $lte: DateExpression };
   }>;
   status?: { $in: string[] };
-  genres?: { $in: string[] };
+  genres?: { $elemMatch: { $in: string[] } };
   type?: string;
 };
 
@@ -57,7 +57,7 @@ export default function createQuery(filters: Filters) {
   // Check if genres filter is provided and is not empty
   if (filters.genres && filters.genres.length) {
     // Add genres to the query
-    query.genres = { $in: filters.genres };
+    query.genres = { $elemMatch: { $in: filters.genres } };
   }
 
   // Check if type filter is provided
