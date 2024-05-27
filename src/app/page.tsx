@@ -3,17 +3,12 @@
 import MediaGrid from "@/components/media/MediaGrid";
 import LoadingSkeleton from "@/components/skeletons/LoadingSkeleton";
 import Grid from "@/components/ui/grid";
-import { Filters } from "@/schemas";
+import useFilters from "@/hooks/useFilters";
 import { api } from "@/trpc/client";
-import parseFilters from "@/utils/parseFilters";
-import { useSearchParams } from "next/navigation";
 
 export default function Home() {
-  // Fetch search params
-  const searchParams = useSearchParams();
-
   // Fetch filters from search params
-  const filters: Filters = parseFilters(searchParams);
+  const filters = useFilters();
 
   // Fetch all media
   const { data, isLoading, isFetching, isError, error, fetchNextPage } =
