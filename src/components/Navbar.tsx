@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AvatarDropdown from "./AvatarDropdown";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
@@ -55,7 +56,7 @@ export function Navbar(props: INavbarProps) {
         ))}
         {isAuthenticated ? (
           // TODO: Add profile dropdown
-          <div>Profile</div>
+          <AvatarDropdown />
         ) : (
           <Link
             href="/api/auth/signin"
