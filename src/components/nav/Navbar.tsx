@@ -1,26 +1,20 @@
-"use client";
-
-import { navLinks } from "@/constants";
+import { auth } from "@/auth";
 import { SearchIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import AvatarDropdown from "./AvatarDropdown";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import NavLinks from "./NavLinks";
 
 export interface INavbarProps {}
 
-export function Navbar(props: INavbarProps) {
+export async function Navbar(props: INavbarProps) {
   // Get the Auth session
-  const session = useSession();
+  const session = await auth();
 
-  // Simulate authentication state
-  const isAuthenticated = session.status === "authenticated";
-
-  // Get the current pathname
-  const currentPathname = usePathname();
+  // Get authentication status
+  const isAuthenticated = session?.user ? true : false;
 
   return (
     <nav className="flex h-[100px] w-full items-center justify-center gap-12 bg-red-600">
@@ -43,19 +37,8 @@ export function Navbar(props: INavbarProps) {
         />
       </div>
       <div className="max-w-auto flex h-full items-center justify-end">
-        {navLinks.map((navLink) => (
-          <Link
-            key={navLink.url}
-            className={`flex h-4/5 items-center px-6 text-center font-bold text-white hover:bg-red-800 ${
-              currentPathname === navLink.url ? "bg-red-700" : ""
-            }`}
-            href={navLink.url}
-          >
-            <span className="flex items-center">{navLink.label}</span>
-          </Link>
-        ))}
+        <NavLinks />
         {isAuthenticated ? (
-          // TODO: Add profile dropdown
           <AvatarDropdown />
         ) : (
           <Link
