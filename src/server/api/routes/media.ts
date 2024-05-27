@@ -6,14 +6,12 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 export const mediaRouter = createTRPCRouter({
   // Procedure to get all media
   getAllMedia: publicProcedure
-    .input(z.object({ page: z.number() }).default({ page: 1 }))
-    .query(async ({ ctx, input: { page } }) => {
+    .input(z.object({ cursor: z.number().default(1) }).default({ cursor: 1 }))
+    .query(async ({ ctx, input: { cursor } }) => {
       await ctx.db;
-      const offset = page ? (page - 1) * 20 : 0;
-      const total = await Media.countDocuments();
-      const totalPages = Math.ceil(total / 20);
+      const offset = cursor ? cursor - 1 : 0;
       const data = await Media.find().skip(offset).limit(20).lean();
-      return { total, data, totalPages };
+      return { data, nextCursor: cursor + 20 };
     }),
   // Procedure to get a media by its ID
   getMediaById: publicProcedure
@@ -24,18 +22,14 @@ export const mediaRouter = createTRPCRouter({
     }),
   // Search for shows
   searchMedia: publicProcedure
-    .input(z.object({ query: z.string(), page: z.number().default(1) }))
-    .query(async ({ ctx, input: { query, page } }) => {
+    .input(z.object({ query: z.string(), cursor: z.number().default(1) }))
+    .query(async ({ ctx, input: { query, cursor } }) => {
       await ctx.db;
-      const offset = page ? (page - 1) * 20 : 0;
-      const total = await Media.countDocuments({
-        title: { $regex: query, $options: "i" },
-      });
-      const totalPages = Math.ceil(total / 20);
+      const offset = cursor ? cursor - 1 : 0;
       const data = await Media.find({ title: { $regex: query, $options: "i" } })
         .skip(offset)
         .limit(20)
         .lean();
-      return { total, data, totalPages };
+      return { data, nextCursor: cursor + 20 };
     }),
 });
