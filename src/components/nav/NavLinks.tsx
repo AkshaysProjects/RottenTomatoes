@@ -11,7 +11,7 @@ export default function NavLinks() {
       {navLinks.map((navLink) => (
         <Link
           key={navLink.url}
-          className={`flex h-4/5 items-center px-6 text-center font-bold text-white hover:bg-red-800 ${
+          className={`mx-2 flex h-4/5 items-center rounded-xl px-4 text-center font-bold text-white hover:bg-red-800 ${
             pathname === navLink.url ? "bg-red-700" : ""
           }`}
           href={navLink.url}
