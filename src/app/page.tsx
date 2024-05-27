@@ -1,8 +1,8 @@
 "use client";
 
-import MediaCard from "@/components/MediaCard";
-import MediaCardSkeleton from "@/components/MediaCardSkeleton";
-import useInfiniteScroll from "@/hooks/useInfiniteScroll";
+import LoadingSkeleton from "@/components/skeletons/LoadingSkeleton";
+import MediaGrid from "@/components/media/MediaGrid";
+import Grid from "@/components/ui/grid";
 import { api } from "@/trpc/client";
 
 export default function Home() {
@@ -15,19 +15,12 @@ export default function Home() {
       },
     );
 
-  // Intersection ref for infinite scrolling
-  const intersectionRef = useInfiniteScroll(fetchNextPage);
-
   // If loading, show loading skeleton
   if (isLoading)
     return (
-      <div className="m-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {Array(20)
-          .fill(null)
-          .map((_, index) => (
-            <MediaCardSkeleton key={index} />
-          ))}
-      </div>
+      <Grid>
+        <LoadingSkeleton />
+      </Grid>
     );
 
   // If error or no data, show error message
@@ -40,19 +33,10 @@ export default function Home() {
   const media = data.pages.map((page) => page.data).flat();
 
   return (
-    <div className="m-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {media.map((item, index) => (
-        <div
-          key={item._id.toString()}
-          ref={index === media.length - 1 ? intersectionRef : null}
-        >
-          <MediaCard key={item._id.toString()} media={item} />
-        </div>
-      ))}
-      {isFetching &&
-        Array(20)
-          .fill(null)
-          .map((_, index) => <MediaCardSkeleton key={index} />)}
-    </div>
+    <MediaGrid
+      media={media}
+      fetchNextPage={fetchNextPage}
+      isFetching={isFetching}
+    />
   );
 }

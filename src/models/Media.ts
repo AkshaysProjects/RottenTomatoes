@@ -1,4 +1,4 @@
-import { Model, Schema, model, models } from "mongoose";
+import { Model, Schema, Types, model, models } from "mongoose";
 
 // Define the media type enum
 export enum MediaType {
@@ -25,6 +25,11 @@ export interface IMedia {
   bannerUrl: string;
   type: MediaType;
   imdbId: string;
+}
+
+// Export the media interface
+export interface Media extends IMedia {
+  _id: Types.ObjectId;
 }
 
 // Define the schema
