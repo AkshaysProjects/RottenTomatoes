@@ -1,6 +1,7 @@
 "use client";
 
 import MediaCard from "@/components/MediaCard";
+import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { api } from "@/trpc/client";
 
 export default function Home() {
@@ -12,6 +13,9 @@ export default function Home() {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       },
     );
+
+  // Intersection ref for infinite scrolling
+  const intersectionRef = useInfiniteScroll(fetchNextPage);
 
   // If loading, show loading message
   // TODO: Use Skeleton loader
@@ -25,8 +29,13 @@ export default function Home() {
 
   return (
     <div className="m-12 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {media.map((item) => (
-        <MediaCard key={item._id.toString()} media={item} />
+      {media.map((item, index) => (
+        <div
+          key={item._id.toString()}
+          ref={index === media.length - 1 ? intersectionRef : null}
+        >
+          <MediaCard key={item._id.toString()} media={item} />
+        </div>
       ))}
     </div>
   );
