@@ -30,8 +30,8 @@ export default function MediaCard({ media }: IMediaCardProps) {
   const releaseYear = new Date(releaseDate ?? 0).getFullYear();
 
   return (
-    <div className="group relative mb-8 mt-4 rounded-lg">
-      <div className="relative h-48 w-full min-w-72 overflow-hidden rounded-xl object-cover">
+    <div className="group relative rounded-lg">
+      <div className="relative h-56 w-full min-w-72 overflow-hidden rounded-xl object-cover">
         <Image
           src={media.bannerUrl}
           alt={media.title}
@@ -40,13 +40,13 @@ export default function MediaCard({ media }: IMediaCardProps) {
           sizes="100%"
         />
       </div>
-      <div className="absolute left-0 w-full p-2">
+      <div className="w-full p-2">
         <div>
           <div className="text-body-m text-light-blue font-light">
             {releaseYear} • <MediaIcon className="mx-1 inline-block" />{" "}
             {media.type}
           </div>
-          <div className="heading-xs">{media.title}</div>
+          <div className="heading-xs mt-2">{media.title}</div>
         </div>
       </div>
       <div className="absolute left-0 top-0 w-full p-3">

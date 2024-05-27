@@ -28,7 +28,7 @@ export default function Home() {
   const media = data.pages.map((page) => page.data).flat();
 
   return (
-    <div className="m-12 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="m-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {media.map((item, index) => (
         <div
           key={item._id.toString()}
