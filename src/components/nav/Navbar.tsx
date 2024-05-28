@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import AvatarDropdown from "./AvatarDropdown";
 import NavLinks from "./NavLinks";
+import NavLinksSheet from "./NavLinksSheet";
 import Search from "./Search";
 
 export interface INavbarProps {}
@@ -17,7 +18,13 @@ export async function Navbar(props: INavbarProps) {
 
   return (
     <nav className="sticky top-0 z-50 flex h-[100px] w-full items-center justify-center gap-12 bg-red-600">
-      <Link href="/" className="relative h-full w-48">
+      <div className="ml-8 block md:hidden">
+        <NavLinksSheet />
+      </div>
+      <Link
+        href="/"
+        className="relative hidden h-full w-48 flex-shrink-0 lg:block"
+      >
         <Image
           src="/logo.png"
           alt="RottenTomatoes"
@@ -29,7 +36,9 @@ export async function Navbar(props: INavbarProps) {
       </Link>
       <Search />
       <div className="max-w-auto flex h-full items-center justify-end">
-        <NavLinks />
+        <div className="hidden md:flex">
+          <NavLinks />
+        </div>
         {isAuthenticated ? (
           <AvatarDropdown />
         ) : (
