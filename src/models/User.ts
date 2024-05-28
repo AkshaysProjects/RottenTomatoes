@@ -3,7 +3,7 @@ import type { AdapterUser } from "next-auth/adapters";
 
 // Create a custom user interface by extending the AdapterUser interface
 export interface IUser extends AdapterUser {
-  shortlist: string[];
+  shortlist: Types.ObjectId[];
 }
 
 export interface TUser extends IUser {
