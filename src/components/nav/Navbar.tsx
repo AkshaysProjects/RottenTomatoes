@@ -16,7 +16,7 @@ export async function Navbar(props: INavbarProps) {
   const isAuthenticated = session?.user ? true : false;
 
   return (
-    <nav className="flex h-[100px] w-full items-center justify-center gap-12 bg-red-600">
+    <nav className="sticky top-0 z-50 flex h-[100px] w-full items-center justify-center gap-12 bg-red-600">
       <Link href="/" className="relative h-full w-48">
         <Image
           src="/logo.png"
