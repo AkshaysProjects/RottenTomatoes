@@ -1,6 +1,5 @@
-import useShortlist from "@/hooks/useShortlist";
+import useShortlistItems from "@/hooks/useShortlistItems";
 import { TMedia } from "@/models";
-import { api } from "@/trpc/client";
 import {
   BookmarkCheckIcon,
   BookmarkIcon,
@@ -17,47 +16,10 @@ export interface IMediaCardProps {
 }
 
 export default function MediaCard({ media }: IMediaCardProps) {
-  // Fetch the current shortlist data using the custom hook
-  const [shortlist, setShortlist] = useShortlist();
-
-  // Check if the media item is in the watchlist
-  const isWatchlisted = shortlist.data.includes(media._id.toString());
-
-  // Add Watchlist Mutation
-  const addMutation = api.shortlist.addMedia.useMutation({
-    onMutate: ({ id }) => {
-      setShortlist((prev) => ({ ...prev, data: [...prev.data, id] }));
-    },
-    onError: (err, { id }) => {
-      setShortlist((prev) => ({
-        ...prev,
-        data: prev.data.filter((i) => i === id),
-      }));
-    },
-  });
-
-  // Remove Watchlist Mutation
-  const removeMutation = api.shortlist.removeMedia.useMutation({
-    onMutate: ({ id }) => {
-      setShortlist((prev) => ({
-        ...prev,
-        data: prev.data.filter((i) => i !== id),
-      }));
-    },
-    onError: (err, { id }) => {
-      setShortlist((prev) => ({
-        ...prev,
-        data: [...prev.data, id],
-      }));
-    },
-  });
-
-  // Toggle watchlist status (functionality to be implemented)
-  const toggleWatchlist = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    if (!isWatchlisted) addMutation.mutate({ id: media._id.toString() });
-    else removeMutation.mutate({ id: media._id.toString() });
-  };
+  // Fetch the shortlist status and toggle function
+  const { isShortlisted, toggleShortlist } = useShortlistItems(
+    media._id.toString(),
+  );
 
   // Determine the media icon based on type
   const MediaIcon = media.type === "Movie" ? ClapperboardIcon : Tv2Icon;
@@ -94,9 +56,9 @@ export default function MediaCard({ media }: IMediaCardProps) {
       <div className="absolute left-0 top-0 w-full p-3">
         <button
           className="rounded-md bg-gray-800/80 p-2 hover:bg-gray-700"
-          onClick={toggleWatchlist}
+          onClick={toggleShortlist}
         >
-          {isWatchlisted ? (
+          {isShortlisted ? (
             <>
               <BookmarkCheckIcon className="block text-white group-hover:hidden" />
               <BookmarkMinusIcon className="hidden text-white group-hover:block" />
