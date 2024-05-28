@@ -30,7 +30,7 @@ export const shortlistRouter = createTRPCRouter({
 
   // Procedure to get shortlist items
   getShortlistItems: publicProcedure
-    .input(z.object({ cursor: z.number() }).default({ cursor: 1 }))
+    .input(z.object({ cursor: z.number().default(1) }).default({ cursor: 1 }))
     .query(async ({ ctx, input: { cursor } }) => {
       const session = await ctx.session;
       if (!session || !session.user)
@@ -39,7 +39,9 @@ export const shortlistRouter = createTRPCRouter({
       const offset = cursor ? cursor - 1 : 0;
       const user = await User.findById(session.user.id);
       if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
-      const data = await Media.find({ _id: { $in: user.shortlist } })
+      const data = await Media.find({
+        _id: { $in: user.shortlist.map((i) => i.toString()) },
+      })
         .skip(offset)
         .limit(20)
         .lean();
