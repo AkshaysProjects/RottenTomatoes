@@ -8,10 +8,10 @@ export interface IProvidersProps {
 
 export function Providers({ children }: IProvidersProps) {
   return (
-    <JotaiProvider>
-      <SessionProvider>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
-      </SessionProvider>
-    </JotaiProvider>
+    <SessionProvider>
+      <TRPCReactProvider>
+        <JotaiProvider>{children}</JotaiProvider>
+      </TRPCReactProvider>
+    </SessionProvider>
   );
 }

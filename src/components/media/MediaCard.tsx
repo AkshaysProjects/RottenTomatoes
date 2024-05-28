@@ -1,3 +1,4 @@
+import useShortlist from "@/hooks/useShortlist";
 import { TMedia } from "@/models";
 import {
   BookmarkCheckIcon,
@@ -8,7 +9,6 @@ import {
   Tv2Icon,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 import { GiTomato } from "react-icons/gi";
 
 export interface IMediaCardProps {
@@ -16,15 +16,22 @@ export interface IMediaCardProps {
 }
 
 export default function MediaCard({ media }: IMediaCardProps) {
-  const [isWatchlisted, setIsWatchlisted] = useState(false);
+  // Fetch the current shortlist data using the custom hook
+  const shortlist = useShortlist();
 
+  // Check if the media item is in the watchlist
+  const isWatchlisted = shortlist.data.includes(media._id.toString());
+
+  // Toggle watchlist status (functionality to be implemented)
   const toggleWatchlist = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setIsWatchlisted((prev) => !prev);
+    // TODO: Add and remove item from user's watchlist
   };
 
+  // Determine the media icon based on type
   const MediaIcon = media.type === "Movie" ? ClapperboardIcon : Tv2Icon;
 
+  // Get the release year of the media item
   const releaseDate =
     media.type === "Movie" ? media.releaseDate : media.firstAirDate;
   const releaseYear = new Date(releaseDate ?? 0).getFullYear();
