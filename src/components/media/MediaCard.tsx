@@ -1,5 +1,6 @@
 import useShortlist from "@/hooks/useShortlist";
 import { TMedia } from "@/models";
+import { api } from "@/trpc/client";
 import {
   BookmarkCheckIcon,
   BookmarkIcon,
@@ -17,15 +18,45 @@ export interface IMediaCardProps {
 
 export default function MediaCard({ media }: IMediaCardProps) {
   // Fetch the current shortlist data using the custom hook
-  const shortlist = useShortlist();
+  const [shortlist, setShortlist] = useShortlist();
 
   // Check if the media item is in the watchlist
   const isWatchlisted = shortlist.data.includes(media._id.toString());
 
+  // Add Watchlist Mutation
+  const addMutation = api.shortlist.addMedia.useMutation({
+    onMutate: ({ id }) => {
+      setShortlist((prev) => ({ ...prev, data: [...prev.data, id] }));
+    },
+    onError: (err, { id }) => {
+      setShortlist((prev) => ({
+        ...prev,
+        data: prev.data.filter((i) => i === id),
+      }));
+    },
+  });
+
+  // Remove Watchlist Mutation
+  const removeMutation = api.shortlist.removeMedia.useMutation({
+    onMutate: ({ id }) => {
+      setShortlist((prev) => ({
+        ...prev,
+        data: prev.data.filter((i) => i !== id),
+      }));
+    },
+    onError: (err, { id }) => {
+      setShortlist((prev) => ({
+        ...prev,
+        data: [...prev.data, id],
+      }));
+    },
+  });
+
   // Toggle watchlist status (functionality to be implemented)
   const toggleWatchlist = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    // TODO: Add and remove item from user's watchlist
+    if (!isWatchlisted) addMutation.mutate({ id: media._id.toString() });
+    else removeMutation.mutate({ id: media._id.toString() });
   };
 
   // Determine the media icon based on type
