@@ -1,3 +1,4 @@
+import Filters from "@/components/filters/Filters";
 import MediaPage from "@/components/media/MediaPage";
 import { redirect } from "next/navigation";
 
@@ -11,5 +12,10 @@ export default function MediaListPage({
   if (mediaParam !== "movies" && mediaParam !== "shows") {
     redirect("/");
   }
-  return <MediaPage />;
+  return (
+    <>
+      <Filters />
+      <MediaPage />
+    </>
+  );
 }

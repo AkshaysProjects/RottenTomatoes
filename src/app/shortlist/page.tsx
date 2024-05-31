@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import Filters from "@/components/filters/Filters";
 import ShortlistPage from "@/components/media/ShortlistPage";
 import { redirect } from "next/navigation";
 
@@ -11,5 +12,10 @@ export default async function Shortlist() {
     redirect("/api/auth/signin");
   }
 
-  return <ShortlistPage />;
+  return (
+    <>
+      <Filters />
+      <ShortlistPage />
+    </>
+  );
 }

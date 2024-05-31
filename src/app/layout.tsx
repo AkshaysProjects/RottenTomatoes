@@ -1,4 +1,3 @@
-import Filters from "@/components/filters/Filters";
 import { Navbar } from "@/components/nav/Navbar";
 import { Providers } from "@/providers";
 import type { Metadata } from "next";
@@ -23,7 +22,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Navbar />
-          <Filters />
           {children}
         </Providers>
       </body>
