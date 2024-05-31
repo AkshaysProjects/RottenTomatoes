@@ -31,7 +31,7 @@ export default function MediaCard({ media }: IMediaCardProps) {
   const releaseYear = new Date(releaseDate ?? 0).getFullYear();
 
   return (
-    <Link href={`/media/${media._id}`}>
+    <Link href={`/dash/media/${media._id}`}>
       <div className="group relative rounded-lg">
         <div className="relative h-56 w-full min-w-72 overflow-hidden rounded-xl object-cover">
           <Image

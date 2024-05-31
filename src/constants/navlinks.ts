@@ -4,7 +4,7 @@ interface NavLink {
 }
 
 export const navLinks: NavLink[] = [
-  { url: "/movies", label: "Movies" },
-  { url: "/shows", label: "TV Shows" },
-  { url: "/shortlist", label: "Shortlist" },
+  { url: "/dash/movies", label: "Movies" },
+  { url: "/dash/shows", label: "TV Shows" },
+  { url: "/dash/shortlist", label: "Shortlist" },
 ];

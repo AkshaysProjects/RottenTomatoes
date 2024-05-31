@@ -1,11 +1,6 @@
-import Filters from "@/components/filters/Filters";
-import MediaPage from "@/components/media/MediaPage";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <>
-      <Filters />
-      <MediaPage />
-    </>
-  );
+  // Redirect to /dash
+  redirect("/dash");
 }
