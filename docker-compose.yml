@@ -1,4 +1,14 @@
 services:
+  web:
+    container_name: rottentomatoes
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.local
+    ports:
+      - "3000:3000"
+
   mongo:
     container_name: mongo
     image: mongo:latest
