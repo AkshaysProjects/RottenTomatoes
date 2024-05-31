@@ -44,7 +44,7 @@ export default function useShortlistItems(mediaId: string) {
 
   // Toggle shortlist status (functionality to be implemented)
   const toggleShortlist = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+    e.preventDefault();
     if (!isShortlisted) addMutation.mutate({ id: mediaId });
     else removeMutation.mutate({ id: mediaId });
   };
