@@ -23,4 +23,8 @@ export const authConfig: NextAuthConfig = {
       from: process.env.RESEND_FROM,
     }),
   ],
+  pages: {
+    signIn: "/auth/login",
+    verifyRequest: "/auth/verify-request",
+  },
 };

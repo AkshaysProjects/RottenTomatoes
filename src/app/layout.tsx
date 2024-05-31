@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/nav/Navbar";
 import { Providers } from "@/providers";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -14,12 +13,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        {modal}
         <Providers>{children}</Providers>
       </body>
     </html>

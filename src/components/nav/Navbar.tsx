@@ -43,7 +43,7 @@ export async function Navbar(props: INavbarProps) {
           <AvatarDropdown />
         ) : (
           <Link
-            href="/api/auth/signin"
+            href="/auth/login"
             className="flex h-4/5 items-center px-6 text-center font-bold text-white"
           >
             <Button className="bg-white text-black hover:bg-gray-200">
