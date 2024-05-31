@@ -1,8 +1,11 @@
+import Cast from "@/components/media/Cast";
+import Genres from "@/components/media/Genres";
+import InfoItem from "@/components/media/InfoItem";
+import MediaLinks from "@/components/media/MediaLinks";
+import Synopsis from "@/components/media/Synopsis";
 import { api } from "@/trpc/server";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { FaImdb, FaYoutube } from "react-icons/fa";
-import { FiLink } from "react-icons/fi";
 import { GiTomato } from "react-icons/gi";
 
 export interface IMediaProps {
@@ -22,7 +25,7 @@ export default async function Media({ params: { id } }: IMediaProps) {
 
   return (
     <div className="flex flex-col rounded-lg bg-white p-4 lg:flex-row lg:p-8">
-      <div className="relative mx-auto mb-8 h-96 w-full lg:mx-8 lg:h-auto lg:max-w-xs lg:pb-0">
+      <div className="relative mx-auto mb-8 h-96 w-full lg:mx-8 lg:h-auto lg:max-w-xs">
         <Image
           src={media.posterUrl}
           alt={media.title}
@@ -30,10 +33,10 @@ export default async function Media({ params: { id } }: IMediaProps) {
           fill
         />
       </div>
-      <div className="ml-auto flex w-full flex-col">
-        <div className="flex items-center">
-          <h1 className="mb-4 text-2xl font-bold lg:text-4xl">{media.title}</h1>
-          <div className="ml-auto flex items-center gap-2 text-2xl font-bold text-red-800">
+      <div className="flex w-full flex-col lg:ml-auto">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold lg:text-4xl">{media.title}</h1>
+          <div className="flex items-center gap-2 text-2xl font-bold text-red-800">
             <GiTomato />
             {Math.round(media.rating)}%
           </div>
@@ -41,111 +44,35 @@ export default async function Media({ params: { id } }: IMediaProps) {
         <div className="mb-4 grid grid-cols-2 gap-4 text-base md:grid-cols-4 lg:text-lg">
           {isMovie ? (
             <>
-              <div>
-                <div className="text-gray-400">Length</div>
-                <div className="font-bold">{media.runtime} min.</div>
-              </div>
-              <div>
-                <div className="text-gray-400">Release Year</div>
-                <div className="font-bold">
-                  {media.releaseDate && media.releaseDate.getFullYear()}
-                </div>
-              </div>
+              <InfoItem label="Length" value={`${media.runtime} min.`} />
+              <InfoItem
+                label="Release Year"
+                value={media.releaseDate!.getFullYear()}
+              />
             </>
           ) : (
             <>
-              <div>
-                <div className="text-gray-400">First Air Date</div>
-                <div className="font-bold">
-                  {media.firstAirDate &&
-                    media.firstAirDate.toLocaleDateString()}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-400">Last Air Date</div>
-                <div className="font-bold">
-                  {media.lastAirDate && media.lastAirDate.toLocaleDateString()}
-                </div>
-              </div>
+              <InfoItem
+                label="First Air Date"
+                value={media.firstAirDate!.toLocaleDateString()}
+              />
+              <InfoItem
+                label="Last Air Date"
+                value={media.lastAirDate!.toLocaleDateString()}
+              />
             </>
           )}
-          <div>
-            <div className="text-gray-400">Language</div>
-            <div className="font-bold">{media.language}</div>
-          </div>
-          <div>
-            <div className="text-gray-400">Status</div>
-            <div className="font-bold">
-              {media.status.charAt(0).toUpperCase() + media.status.slice(1)}
-            </div>
-          </div>
+          <InfoItem label="Language" value={media.language} />
+          <InfoItem label="Status" value={media.status} />
         </div>
-
-        <div className="mb-4">
-          <div className="mb-2 text-lg font-bold">Genres</div>
-          <div className="flex flex-wrap">
-            {media.genres?.map((genre, index) => (
-              <div
-                key={index}
-                className="mb-2 mr-2 rounded-full border border-red-500 bg-gray-600 px-4 py-2 text-sm capitalize text-white"
-              >
-                {genre}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <div className="mb-2 text-lg font-bold">Synopsis</div>
-          <p className="text-base">{media.summary}</p>
-        </div>
-
-        <div className="mb-4">
-          <div className="mb-2 text-lg font-bold">Cast</div>
-          <div className="flex flex-wrap">
-            {media.cast?.slice(0, 25).map((actor, index) => (
-              <div
-                key={index}
-                className="mb-2 mr-2 rounded-full border border-red-500 bg-gray-600 px-4 py-2 text-sm capitalize text-white"
-              >
-                {actor}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap">
-          {media.homepage && (
-            <a
-              href={media.homepage}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mb-2 mr-2 flex items-center rounded-lg bg-blue-500 px-3 py-2 text-sm text-white md:text-base"
-            >
-              <FiLink className="mr-1 text-lg" /> Website
-            </a>
-          )}
-          {media.trailerUrl && (
-            <a
-              href={media.trailerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mb-2 mr-2 flex items-center rounded-lg bg-red-500 px-3 py-2 text-sm text-white md:text-base"
-            >
-              <FaYoutube className="mr-1 text-lg" /> Trailer
-            </a>
-          )}
-          {media.imdbId && (
-            <a
-              href={`https://www.imdb.com/title/${media.imdbId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mb-2 mr-2 flex items-center rounded-lg bg-yellow-500 px-3 py-2 text-sm text-white md:text-base"
-            >
-              <FaImdb className="mr-1 text-lg" /> IMDb
-            </a>
-          )}
-        </div>
+        <Genres genres={media.genres} />
+        <Synopsis summary={media.summary} />
+        <Cast cast={media.cast} />
+        <MediaLinks
+          homepage={media.homepage}
+          trailerUrl={media.trailerUrl}
+          imdbId={media.imdbId}
+        />
       </div>
     </div>
   );
