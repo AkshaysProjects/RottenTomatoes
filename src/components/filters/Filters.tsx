@@ -7,7 +7,7 @@ export default async function Filters() {
   const filterValues = await api.media.getMediaFilters();
 
   return (
-    <div className="mx-auto flex h-16 items-center justify-center gap-2 border-b-2">
+    <div className="flex h-16 items-center gap-2 overflow-auto border-b-2 md:mx-auto md:justify-center">
       {filters.map((filter) => (
         <FilterPopover
           key={filter.slug}
