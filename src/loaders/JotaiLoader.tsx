@@ -1,36 +1,13 @@
-"use client";
-
-import { useSetShortlist } from "@/hooks/useShortlist";
-import { api } from "@/trpc/client";
-import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import ShortlistLoader from "./ShortlistLoader";
 
 export default function JotaiLoader() {
-  // Get the setter for the shortlist atom
-  const setShortlist = useSetShortlist();
+  // Get the current user session
+  const { status: sessionStatus } = useSession();
 
-  // Fetch the shortlist data using a custom hook from trpc client
-  const { data, isLoading, isError, error } =
-    api.shortlist.getShortlist.useQuery();
+  // If user is not authenticated, return null
+  if (sessionStatus !== "authenticated") return null;
 
-  useEffect(() => {
-    if (isLoading) {
-      // Update the shortlist atom state to loading
-      setShortlist((prev) => ({ ...prev, status: "loading" }));
-    } else if (isError) {
-      // Update the shortlist atom state to error and store the error message
-      setShortlist((prev) => ({
-        ...prev,
-        status: "error",
-        error: error.message,
-      }));
-    } else if (data) {
-      // Update the shortlist atom state to success and map the data to strings
-      setShortlist((prev) => ({
-        ...prev,
-        status: "success",
-        data: data.map((item) => item.toString()),
-      }));
-    }
-  }, [data, isLoading, isError, error, setShortlist]);
-  return null;
+  // If the user is authenticated, load the ShortlistLoader component
+  return <ShortlistLoader />;
 }
