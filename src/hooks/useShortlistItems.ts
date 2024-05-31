@@ -1,10 +1,18 @@
 import { api } from "@/trpc/client";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import useShortlist from "./useShortlist";
 
 export default function useShortlistItems(mediaId: string) {
   // Fetch the current shortlist data using the custom hook
   const [shortlist, setShortlist] = useShortlist();
   const apiUtils = api.useUtils();
+
+  // Fetch the current user session
+  const session = useSession();
+
+  // Initialize the router
+  const router = useRouter();
 
   // Check if the media item is in the shortlist
   const isShortlisted = shortlist.data.includes(mediaId);
@@ -45,6 +53,10 @@ export default function useShortlistItems(mediaId: string) {
   // Toggle shortlist status (functionality to be implemented)
   const toggleShortlist = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (session.status !== "authenticated") {
+      router.push("/api/auth/signin");
+      return;
+    }
     if (!isShortlisted) addMutation.mutate({ id: mediaId });
     else removeMutation.mutate({ id: mediaId });
   };
