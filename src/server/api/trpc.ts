@@ -1,4 +1,5 @@
-import { initTRPC } from "@trpc/server";
+import { User } from "@/models";
+import { TRPCError, initTRPC } from "@trpc/server";
 import { Mongoose } from "mongoose";
 import { Session } from "next-auth";
 import superjson from "superjson";
@@ -76,3 +77,44 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+
+/**
+ * Protected procedure
+ *
+ * This is the base piece you use to build new queries and mutations on your tRPC API. It guarantees
+ * that a user querying is authorized, and you can access user session data.
+ */
+
+export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
+  // Await the session from the context
+  const session = await ctx.session;
+
+  // If there is no session or user, throw an UNAUTHORIZED error
+  if (!session || !session.user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You must be logged in to access this resource",
+    });
+  }
+
+  // Await the database connection from the context
+  await ctx.db;
+
+  // Find the user in the database
+  const user = await User.findById(session.user.id);
+
+  // If the user is not found, throw an UNAUTHORIZED error
+  if (!user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "User not found",
+    });
+  }
+
+  return next({
+    ctx: {
+      ...ctx, // Pass the context along
+      user, // Attach the user to the context
+    },
+  });
+});

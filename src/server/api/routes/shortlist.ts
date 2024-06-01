@@ -1,9 +1,7 @@
 import { Media } from "@/models";
-import User from "@/models/User";
-import { TRPCError } from "@trpc/server";
 import { Types } from "mongoose";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 /**
  * TRPC router for managing a user's media shortlist:
@@ -14,13 +12,8 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
  */
 export const shortlistRouter = createTRPCRouter({
   // Procedure to get shortlist
-  getShortlist: publicProcedure.query(async ({ ctx }) => {
-    const session = await ctx.session;
-    if (!session || !session.user)
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    await ctx.db;
-    const user = await User.findById(session.user.id);
-    if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+  getShortlist: protectedProcedure.query(async ({ ctx: { db, user } }) => {
+    await db;
     if (!user.shortlist) {
       user.shortlist = [];
       user.save();
@@ -29,16 +22,11 @@ export const shortlistRouter = createTRPCRouter({
   }),
 
   // Procedure to get shortlist items
-  getShortlistItems: publicProcedure
+  getShortlistItems: protectedProcedure
     .input(z.object({ cursor: z.number().default(1) }).default({ cursor: 1 }))
-    .query(async ({ ctx, input: { cursor } }) => {
-      const session = await ctx.session;
-      if (!session || !session.user)
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      await ctx.db;
+    .query(async ({ ctx: { db, user }, input: { cursor } }) => {
+      await db;
       const offset = cursor ? cursor - 1 : 0;
-      const user = await User.findById(session.user.id);
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
       const data = await Media.find({
         _id: { $in: user.shortlist.map((i) => i.toString()) },
       })
@@ -49,15 +37,10 @@ export const shortlistRouter = createTRPCRouter({
     }),
 
   // Procedure to add media to shortlist
-  addMedia: publicProcedure
+  addMedia: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input: { id } }) => {
-      const session = await ctx.session;
-      if (!session || !session.user)
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      await ctx.db;
-      const user = await User.findById(session.user.id);
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+    .mutation(async ({ ctx: { db, user }, input: { id } }) => {
+      await db;
       const objId = new Types.ObjectId(id);
       if (user.shortlist.includes(objId)) return user.shortlist;
       user.shortlist.push(objId);
@@ -66,15 +49,10 @@ export const shortlistRouter = createTRPCRouter({
     }),
 
   // Procedure to remove media from shortlist
-  removeMedia: publicProcedure
+  removeMedia: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input: { id } }) => {
-      const session = await ctx.session;
-      if (!session || !session.user)
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      await ctx.db;
-      const user = await User.findById(session.user.id);
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+    .mutation(async ({ ctx: { db, user }, input: { id } }) => {
+      await db;
       user.shortlist = user.shortlist.filter(
         (mediaId) => mediaId.toString() !== id,
       );
