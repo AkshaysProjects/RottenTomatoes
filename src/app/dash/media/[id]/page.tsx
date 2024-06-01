@@ -54,11 +54,11 @@ export default async function Media({ params: { id } }: IMediaProps) {
             <>
               <InfoItem
                 label="First Air Date"
-                value={media.firstAirDate!.toLocaleDateString()}
+                value={media.firstAirDate?.toLocaleDateString() || "N/A"}
               />
               <InfoItem
                 label="Last Air Date"
-                value={media.lastAirDate!.toLocaleDateString()}
+                value={media.lastAirDate?.toLocaleDateString() || "N/A"}
               />
             </>
           )}
